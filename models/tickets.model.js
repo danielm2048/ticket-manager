@@ -7,7 +7,7 @@ const ticketSchema = new Schema({
 	content: { type: String, required: true },
 	userEmail: { type: String, required: true },
 	done: { type: Boolean, required: true },
-	creationDate: { type: Date, required: true },
+	creationTime: { type: Date, required: true },
 	labels: [{ type: Date, required: true }],
 });
 
