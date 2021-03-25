@@ -29,6 +29,24 @@
 	color: red;
 }
 
+.ticket-actions {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	margin-top: 15px;
+}
+
+.ticket-actions button {
+	height: 50px;
+	width: 50px;
+	border-radius: 50%;
+	border: black 1px solid;
+	font-size: 20px;
+	margin-right: 10px;
+	cursor: pointer;
+}
+
 .more-less-button {
 	border: none;
 	outline: none;
@@ -46,6 +64,43 @@
 	top: 0;
 	right: 0;
 	cursor: pointer;
+}
+
+.tooltip {
+	position: relative;
+	display: inline-block;
+	border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+	visibility: hidden;
+	width: 120px;
+	background-color: rgb(113, 148, 179);
+	color: black;
+	font-size: 16px;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+	position: absolute;
+	z-index: 1;
+	bottom: 150%;
+	left: 50%;
+	margin-left: -60px;
+}
+
+.tooltip .tooltiptext::after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: rgb(113, 148, 179) transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+	visibility: visible;
 }
 
 .pagination {

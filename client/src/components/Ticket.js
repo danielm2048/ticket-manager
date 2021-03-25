@@ -1,3 +1,4 @@
+import TicketActions from "./TicketActions";
 import TicketDescription from "./TicketDescription";
 
 const Ticket = ({ ticket, onClick }) => {
@@ -22,6 +23,7 @@ const Ticket = ({ ticket, onClick }) => {
 			<button className="hideTicketButton" onClick={() => onClick(ticket.id)}>
 				Hide
 			</button>
+			<TicketActions done={ticket.done} />
 		</div>
 	);
 };
