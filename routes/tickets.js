@@ -50,4 +50,19 @@ router.patch("/:ticketId/undone", async (req, res) => {
 	}
 });
 
+router.delete("/:ticketId", async (req, res) => {
+	const { ticketId } = req.params;
+
+	try {
+		const result = await Ticket.deleteOne({ _id: ticketId });
+		if (!result.ok) {
+			return res.status(400).json("Can't delete ticket");
+		}
+		return res.json({ deleted: true });
+	} catch (err) {
+		console.error(err);
+		res.status(500).json("Server error");
+	}
+});
+
 module.exports = router;
