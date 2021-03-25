@@ -11,14 +11,14 @@ const Ticket = ({ ticket, onClick }) => {
 			<div className="extra-ticket-info">
 				<span className="ticket-user-email">From: {ticket.userEmail}</span>
 				<span>{date}</span>
-			</div>
-			<div>
-				{ticket.labels &&
-					ticket.labels.map((label, i) => (
-						<span className="label" key={i}>
-							{label}
-						</span>
-					))}
+				<div className="labels">
+					{ticket.labels &&
+						ticket.labels.map((label, i) => (
+							<span className="label" key={i}>
+								{label}
+							</span>
+						))}
+				</div>
 			</div>
 			<button className="hideTicketButton" onClick={() => onClick(ticket.id)}>
 				Hide

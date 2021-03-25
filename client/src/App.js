@@ -4,14 +4,20 @@ import axios from "axios";
 import TicketList from "./components/TicketList";
 import Search from "./components/Search";
 import Pagination from "./components/Pagination";
+import Topnav from "./components/Topnav";
+import Loader from "./components/Loader";
 
 function App() {
 	const [tickets, setTickets] = useState([]);
 	const [search, setSearch] = useState("");
 	const [hidden, setHidden] = useState({});
 
+	const [showOnlyDone, setShowOnlyDone] = useState(false);
+
 	const [ticketsPerPage] = useState(20);
 	const [currentPage, setCurrentPage] = useState(1);
+
+	const [loading, setLoading] = useState(false);
 
 	const onSearchChange = (e) => {
 		setSearch(e.target.value);
@@ -27,8 +33,11 @@ function App() {
 
 	useEffect(() => {
 		const fetchTickets = async () => {
+			setLoading(true);
+
 			const { data } = await axios.get(`/api/tickets?searchText=${search}`);
 
+			setLoading(false);
 			setTickets(data);
 		};
 
@@ -51,27 +60,37 @@ function App() {
 
 	return (
 		<div className="App">
-			<h1>Manage your tickets!</h1>
+			<Topnav showOnlyDone={showOnlyDone} setShowOnlyDone={setShowOnlyDone} />
 			<Search value={search} onChange={onSearchChange} />
-			<p>Showing {currentTickets.length} tickets</p>
-			<div>
-				{Object.keys(hidden).length > 0 && (
+			{loading ? (
+				<Loader />
+			) : (
+				<>
+					<p style={{ fontStyle: "italic" }}>
+						Showing {currentTickets.length} tickets
+					</p>
 					<div>
-						<span id="hideTicketsCounter">{Object.keys(hidden).length} </span>
-						hidden tickets -
-						<button id="restoreHideTickets" onClick={restore}>
-							restore
-						</button>
+						{Object.keys(hidden).length > 0 && (
+							<div style={{ fontSize: 18 }}>
+								<span id="hideTicketsCounter">
+									{Object.keys(hidden).length}{" "}
+								</span>
+								hidden tickets -{" "}
+								<button id="restoreHideTickets" onClick={restore}>
+									restore
+								</button>
+							</div>
+						)}
 					</div>
-				)}
-			</div>
-			<TicketList tickets={currentTickets} onHideClick={onHideClick} />
-			<Pagination
-				perPage={ticketsPerPage}
-				total={notHiddenTickets.length}
-				paginate={paginate}
-				curr={currentPage}
-			/>
+					<TicketList tickets={currentTickets} onHideClick={onHideClick} />
+					<Pagination
+						perPage={ticketsPerPage}
+						total={notHiddenTickets.length}
+						paginate={paginate}
+						curr={currentPage}
+					/>
+				</>
+			)}
 		</div>
 	);
 }

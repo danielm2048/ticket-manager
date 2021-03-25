@@ -5,13 +5,17 @@ const TicketDescription = ({ description }) => {
 
 	return (
 		<p>
-			{showMore ? description : description.slice(0, 200) + "..."}
-			<button
-				className="more-less-button"
-				onClick={() => setShowMore((prevState) => !prevState)}
-			>
-				Show {showMore ? "less" : "more"}
-			</button>
+			{showMore && description.length < 200
+				? description
+				: description.slice(0, 200) + "..."}
+			{description.length > 200 && (
+				<button
+					className="more-less-button"
+					onClick={() => setShowMore((prevState) => !prevState)}
+				>
+					Show {showMore ? "less" : "more"}
+				</button>
+			)}
 		</p>
 	);
 };
