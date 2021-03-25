@@ -11,6 +11,14 @@ const ticketSchema = new Schema({
 	labels: [{ type: Date, required: true }],
 });
 
+ticketSchema.virtual("id").get(function () {
+	return this._id.toHexString();
+});
+
+ticketSchema.set("toJSON", {
+	virtuals: true,
+});
+
 const Ticket = mongoose.model("Ticket", ticketSchema);
 
 module.exports = Ticket;
