@@ -8,7 +8,7 @@ const ticketSchema = new Schema({
 	userEmail: { type: String, required: true },
 	done: { type: Boolean, default: false },
 	creationTime: { type: Date, default: new Date() },
-	labels: [{ type: Date, required: true }],
+	labels: [{ type: String, required: true }],
 });
 
 ticketSchema.virtual("id").get(function () {
