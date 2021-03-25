@@ -1,14 +1,11 @@
 import Ticket from "./Ticket";
 
-const TicketList = ({ tickets, hidden, onHideClick }) => {
+const TicketList = ({ tickets, onHideClick }) => {
 	return (
 		<div>
-			{tickets.reduce((accu, curr, i) => {
-				if (!hidden[curr.id]) {
-					accu.push(<Ticket key={i} ticket={curr} onClick={onHideClick} />);
-				}
-				return accu;
-			}, [])}
+			{tickets.map((ticket, i) => (
+				<Ticket key={i} ticket={ticket} onClick={onHideClick} />
+			))}
 		</div>
 	);
 };

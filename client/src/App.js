@@ -35,9 +35,14 @@ function App() {
 		fetchTickets();
 	}, [search]);
 
+	const notHiddenTickets = tickets.filter((ticket) => !hidden[ticket.id]);
+
 	const indexOfLastTicket = currentPage * ticketsPerPage;
 	const indexOfFirstTicket = indexOfLastTicket - ticketsPerPage;
-	const currentTickets = tickets.slice(indexOfFirstTicket, indexOfLastTicket);
+	const currentTickets = notHiddenTickets.slice(
+		indexOfFirstTicket,
+		indexOfLastTicket
+	);
 
 	const paginate = (pageNumber) => {
 		setCurrentPage(pageNumber);
@@ -60,14 +65,10 @@ function App() {
 					</div>
 				)}
 			</div>
-			<TicketList
-				tickets={currentTickets}
-				hidden={hidden}
-				onHideClick={onHideClick}
-			/>
+			<TicketList tickets={currentTickets} onHideClick={onHideClick} />
 			<Pagination
 				perPage={ticketsPerPage}
-				total={tickets.length}
+				total={notHiddenTickets.length}
 				paginate={paginate}
 				curr={currentPage}
 			/>
