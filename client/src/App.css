@@ -5,15 +5,36 @@
 .ticket {
 	position: relative;
 	display: flex;
+	width: 75%;
 	flex-direction: column;
+	align-items: flex-start;
 	background-color: aliceblue;
-	border: black 1px solid;
+	border: black 0.5px solid;
+	border-radius: 15px;
 	padding: 5px;
 	margin: 15px auto;
 }
 
+.extra-ticket-info {
+	display: flex;
+	align-items: center;
+}
+
+.ticket-user-email {
+	font-weight: 600;
+	margin-right: 10px;
+}
+
 .label {
 	color: red;
+}
+
+.more-less-button {
+	border: none;
+	outline: none;
+	background: transparent;
+	color: blue;
+	cursor: pointer;
 }
 
 .hideTicketButton {

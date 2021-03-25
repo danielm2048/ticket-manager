@@ -1,10 +1,16 @@
+import TicketDescription from "./TicketDescription";
+
 const Ticket = ({ ticket, onClick }) => {
+	let date = new Date(ticket.creationTime);
+	date = date.toDateString() + " " + date.toISOString().slice(11, 16);
 	return (
 		<div className="ticket">
-			<span>Title: {ticket.title}</span>
-			<p>Content: {ticket.content}</p>
-			<span>Created At: {ticket.creationTime}</span>
-			<span>User Email: {ticket.userEmail}</span>
+			<h3>{ticket.title}</h3>
+			<TicketDescription description={ticket.content} />
+			<div className="extra-ticket-info">
+				<span className="ticket-user-email">From: {ticket.userEmail}</span>
+				<span>{date}</span>
+			</div>
 			<div>
 				{ticket.labels &&
 					ticket.labels.map((label, i) => (
