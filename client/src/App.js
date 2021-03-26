@@ -8,6 +8,8 @@ import Topnav from "./components/Topnav";
 import Loader from "./components/Loader";
 import Modal from "./components/Modal";
 
+let cancelToken;
+
 function App() {
 	const [tickets, setTickets] = useState([]);
 	const [search, setSearch] = useState("");
@@ -33,29 +35,47 @@ function App() {
 	};
 
 	const fetchTickets = useCallback(async () => {
-		setLoading(true);
+		if (typeof cancelToken != typeof undefined) {
+			cancelToken.cancel("Operation canceled due to new request.");
+		}
 
-		const { data } = await axios.get(
-			`/api/tickets?searchText=${search}${showOnlyDone ? "&done=true" : ""}`
-		);
+		cancelToken = axios.CancelToken.source();
 
-		setLoading(false);
-		setTickets(data);
-		setCurrentPage(1);
+		try {
+			setLoading(true);
+
+			const { data } = await axios.get(
+				`/api/tickets?searchText=${search}${showOnlyDone ? "&done=true" : ""}`,
+				{ cancelToken: cancelToken.token }
+			);
+
+			setLoading(false);
+			setTickets(data);
+			setCurrentPage(1);
+		} catch (err) {
+			if (!err.message) {
+				console.error(err);
+			}
+		}
 	}, [search, showOnlyDone]);
 
 	const addTicket = async (title, content, userEmail, labels) => {
-		setLoading(true);
-		const { data } = await axios.post("/api/tickets", {
-			title,
-			content,
-			userEmail,
-			labels,
-		});
-		setLoading(false);
+		try {
+			setLoading(true);
+			const { data } = await axios.post("/api/tickets", {
+				title,
+				content,
+				userEmail,
+				labels,
+			});
+			setLoading(false);
 
-		setTickets([data, ...tickets]);
-		setCurrentPage(1);
+			setTickets([...tickets, data]);
+			setCurrentPage(Math.ceil((notHiddenTickets.length + 1) / ticketsPerPage));
+		} catch (err) {
+			console.error(err);
+			alert("Can't add at the moment... Try again later!");
+		}
 	};
 
 	const deleteTicket = async (id) => {
@@ -66,7 +86,11 @@ function App() {
 
 			if (data.deleted) {
 				setTickets(tickets.filter((ticket) => ticket.id !== id));
-				setCurrentPage(1);
+				setCurrentPage(
+					currentTickets.length === 1
+						? Math.ceil((notHiddenTickets.length - 1) / ticketsPerPage)
+						: currentPage
+				);
 			} else {
 				alert("Can't delete at the moment... Try again later!!");
 			}
@@ -133,8 +157,8 @@ function App() {
 						{Object.keys(hidden).length > 0 && (
 							<div style={{ fontSize: 18 }}>
 								<span id="hideTicketsCounter">
-									{Object.keys(hidden).length}{" "}
-								</span>
+									{Object.keys(hidden).length}
+								</span>{" "}
 								hidden tickets -{" "}
 								<button
 									id="restoreHideTickets"
