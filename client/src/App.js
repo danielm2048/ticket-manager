@@ -34,11 +34,14 @@ function App() {
 	const fetchTickets = useCallback(async () => {
 		setLoading(true);
 
-		const { data } = await axios.get(`/api/tickets?searchText=${search}`);
+		const { data } = await axios.get(
+			`/api/tickets?searchText=${search}${showOnlyDone ? "&done=true" : ""}`
+		);
 
 		setLoading(false);
 		setTickets(data);
-	}, [search]);
+		setCurrentPage(1);
+	}, [search, showOnlyDone]);
 
 	const deleteTicket = async (id) => {
 		try {

@@ -177,9 +177,9 @@ body {
 #restoreHideTickets {
 	font-size: 16px;
 	text-transform: uppercase;
-	color: white;
-	background-color: #008cba;
-	padding: 10px 20px;
+	color: black;
+	background-color: #6c5abb;
+	padding: 10px 15px;
 	border: none;
 	border-radius: 5px;
 	outline: none;

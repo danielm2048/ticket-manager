@@ -3,11 +3,17 @@ const router = require("express").Router();
 const Ticket = require("../models/tickets.model");
 
 router.get("/", async (req, res) => {
-	const { searchText } = req.query;
+	const { searchText, done } = req.query;
 
 	const regex = new RegExp(searchText, "i");
 
-	const tickets = await Ticket.find({ title: { $regex: regex } });
+	let tickets;
+
+	if (done === "true") {
+		tickets = await Ticket.find({ title: { $regex: regex }, done: true });
+	} else {
+		tickets = await Ticket.find({ title: { $regex: regex } });
+	}
 
 	res.json(tickets);
 });
