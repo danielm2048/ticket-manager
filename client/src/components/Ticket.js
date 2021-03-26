@@ -1,7 +1,7 @@
 import TicketActions from "./TicketActions";
 import TicketDescription from "./TicketDescription";
 
-const Ticket = ({ ticket, onClick }) => {
+const Ticket = ({ ticket, onClick, deleteTicket, toggleTicketDone }) => {
 	let date = new Date(ticket.creationTime);
 	date = date.toDateString() + " " + date.toISOString().slice(11, 16);
 	return (
@@ -23,7 +23,11 @@ const Ticket = ({ ticket, onClick }) => {
 			<button className="hideTicketButton" onClick={() => onClick(ticket.id)}>
 				Hide
 			</button>
-			<TicketActions done={ticket.done} />
+			<TicketActions
+				done={ticket.done}
+				deleteTicket={() => deleteTicket(ticket.id)}
+				toggleTicketDone={() => toggleTicketDone(ticket.id, ticket.done)}
+			/>
 		</div>
 	);
 };

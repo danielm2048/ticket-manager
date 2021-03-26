@@ -103,6 +103,7 @@ body {
 	border: black 1px solid;
 	font-size: 20px;
 	margin-right: 10px;
+	outline: none;
 	cursor: pointer;
 }
 

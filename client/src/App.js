@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import TicketList from "./components/TicketList";
 import Search from "./components/Search";
@@ -31,18 +31,59 @@ function App() {
 		setHidden({});
 	};
 
-	useEffect(() => {
-		const fetchTickets = async () => {
-			setLoading(true);
+	const fetchTickets = useCallback(async () => {
+		setLoading(true);
 
-			const { data } = await axios.get(`/api/tickets?searchText=${search}`);
+		const { data } = await axios.get(`/api/tickets?searchText=${search}`);
 
-			setLoading(false);
-			setTickets(data);
-		};
-
-		fetchTickets();
+		setLoading(false);
+		setTickets(data);
 	}, [search]);
+
+	const deleteTicket = async (id) => {
+		try {
+			setLoading(true);
+			const { data } = await axios.delete(`/api/tickets/${id}`);
+			setLoading(false);
+
+			if (data.deleted) {
+				setTickets(tickets.filter((ticket) => ticket.id !== id));
+			} else {
+				alert("Can't delete at the moment... Try again later!!");
+			}
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
+	const toggleTicketDone = async (id, isDone) => {
+		try {
+			setLoading(true);
+			const { data } = await axios.patch(
+				`/api/tickets/${id}/${isDone ? "undone" : "done"}`
+			);
+			setLoading(false);
+
+			if (data.updated) {
+				setTickets(
+					tickets.map((ticket) => {
+						if (ticket.id === id) {
+							ticket.done = !ticket.done;
+						}
+						return ticket;
+					})
+				);
+			} else {
+				alert("Can't mark as done at the moment... Try again later!!");
+			}
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
+	useEffect(() => {
+		fetchTickets();
+	}, [fetchTickets]);
 
 	const notHiddenTickets = tickets.filter((ticket) => !hidden[ticket.id]);
 
@@ -82,7 +123,12 @@ function App() {
 							</div>
 						)}
 					</div>
-					<TicketList tickets={currentTickets} onHideClick={onHideClick} />
+					<TicketList
+						tickets={currentTickets}
+						onHideClick={onHideClick}
+						deleteTicket={deleteTicket}
+						toggleTicketDone={toggleTicketDone}
+					/>
 					<Pagination
 						perPage={ticketsPerPage}
 						total={notHiddenTickets.length}
