@@ -6,6 +6,7 @@ import Search from "./components/Search";
 import Pagination from "./components/Pagination";
 import Topnav from "./components/Topnav";
 import Loader from "./components/Loader";
+import Modal from "./components/Modal";
 
 function App() {
 	const [tickets, setTickets] = useState([]);
@@ -43,6 +44,20 @@ function App() {
 		setCurrentPage(1);
 	}, [search, showOnlyDone]);
 
+	const addTicket = async (title, content, userEmail, labels) => {
+		setLoading(true);
+		const { data } = await axios.post("/api/tickets", {
+			title,
+			content,
+			userEmail,
+			labels,
+		});
+		setLoading(false);
+
+		setTickets([data, ...tickets]);
+		setCurrentPage(1);
+	};
+
 	const deleteTicket = async (id) => {
 		try {
 			setLoading(true);
@@ -51,6 +66,7 @@ function App() {
 
 			if (data.deleted) {
 				setTickets(tickets.filter((ticket) => ticket.id !== id));
+				setCurrentPage(1);
 			} else {
 				alert("Can't delete at the moment... Try again later!!");
 			}
@@ -120,7 +136,11 @@ function App() {
 									{Object.keys(hidden).length}{" "}
 								</span>
 								hidden tickets -{" "}
-								<button id="restoreHideTickets" onClick={restore}>
+								<button
+									id="restoreHideTickets"
+									className="action-button"
+									onClick={restore}
+								>
 									restore
 								</button>
 							</div>
@@ -132,6 +152,7 @@ function App() {
 						deleteTicket={deleteTicket}
 						toggleTicketDone={toggleTicketDone}
 					/>
+					<Modal formSubmit={addTicket} />
 					<Pagination
 						perPage={ticketsPerPage}
 						total={notHiddenTickets.length}

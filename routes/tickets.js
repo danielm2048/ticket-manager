@@ -10,12 +10,34 @@ router.get("/", async (req, res) => {
 	let tickets;
 
 	if (done === "true") {
-		tickets = await Ticket.find({ title: { $regex: regex }, done: true });
+		tickets = await Ticket.find({ title: { $regex: regex }, done: true }).sort(
+			"-creationTime"
+		);
 	} else {
-		tickets = await Ticket.find({ title: { $regex: regex } });
+		tickets = await Ticket.find({ title: { $regex: regex } }).sort(
+			"-creationTime"
+		);
 	}
 
 	res.json(tickets);
+});
+
+router.post("/", async (req, res) => {
+	const { title, content, userEmail, labels } = req.body;
+
+	if (!title || !content || !userEmail) {
+		return res.status(400).json("Please enter all fields");
+	}
+
+	const newTicket = new Ticket({ title, content, userEmail, labels });
+
+	try {
+		const savedTicket = await newTicket.save();
+		res.json(savedTicket);
+	} catch (err) {
+		console.error(err);
+		res.status(500).json("Server error");
+	}
 });
 
 router.patch("/:ticketId/done", async (req, res) => {

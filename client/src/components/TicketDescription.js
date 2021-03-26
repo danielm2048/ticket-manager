@@ -5,7 +5,7 @@ const TicketDescription = ({ description }) => {
 
 	return (
 		<p>
-			{showMore && description.length < 200
+			{showMore || description.length < 200
 				? description
 				: description.slice(0, 200) + "..."}
 			{description.length > 200 && (
