@@ -10,13 +10,9 @@ router.get("/", async (req, res) => {
 	let tickets;
 
 	if (done === "true") {
-		tickets = await Ticket.find({ title: { $regex: regex }, done: true }).sort(
-			"-creationTime"
-		);
+		tickets = await Ticket.find({ title: { $regex: regex }, done: true });
 	} else {
-		tickets = await Ticket.find({ title: { $regex: regex } }).sort(
-			"-creationTime"
-		);
+		tickets = await Ticket.find({ title: { $regex: regex } });
 	}
 
 	res.json(tickets);
